@@ -19,14 +19,22 @@ inputs:
   work-dir:
     description: 'Directory in which to run gostyle'
     required: false
-    default: '.'
+    default: ''
   repo-checkout:
     description: "Checkout the repository"
     required: false
-    default: true
+    default: false
   go-version-file:
     description: 'Path to the go.mod or go.work file.'
     required: false
+  config-file:
+    description: 'Config file path for gostyle.'
+    required: false
+    default: ''
+  args:
+    description: 'Args for gostyle'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -41,6 +49,19 @@ runs:
     - name: Install gostyle
       run: go install github.com/k1LoW/gostyle@latest
       shell: bash
+    - name: Set package
+      id: package
+      run: |
+        if [ -z "${{ inputs.work-dir }}" ]; then echo "PACKAGE=${{ inputs.go-package }}" >> "$GITHUB_OUTPUT"; fi
+        if [ -n "${{ inputs.work-dir }}" ]; then echo "PACKAGE=${{ inputs.work-dir }}/${{ inputs.go-package }}" >> "$GITHUB_OUTPUT"; fi
+      shell: bash
+    - name: Set args
+      id: args
+      run: |
+        if [ -z "${{ inputs.config-file }}" ]; then echo "ARGS=${{ inputs.args }}" >> "$GITHUB_OUTPUT"; fi
+        if [ -n "${{ inputs.config-file }}" ] && [ -z "${{ inputs.work-dir }}" ]; then echo "ARGS=-gostyle.config=${PWD}/${{ inputs.config-file }}" >> "$GITHUB_OUTPUT"; fi
+        if [ -n "${{ inputs.config-file }}" ] && [ -n "${{ inputs.work-dir }}" ]; then echo "ARGS=-gostyle.config=${PWD}/${{ inputs.work-dir }}/${{ inputs.config-file }}" >> "$GITHUB_OUTPUT"; fi
+      shell: bash
     - name: Run gostyle
-      run: go vet -vettool=`which gostyle` ${{ inputs.work-dir }}/${{ inputs.go-package }}
+      run: go vet -vettool=`which gostyle` ${{ steps.args.outputs.ARGS }} ${{ steps.package.outputs.PACKAGE }}
       shell: bash
