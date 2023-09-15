@@ -1,6 +1,10 @@
 name: 'gostyle-action'
 description: 'Run gostyle'
 inputs:
+  setup-go:
+    description: "Set up Go"
+    required: false
+    default: false
   go-version-input:
     description: 'Version of Go to use for gostyle'
     required: false
@@ -38,9 +42,10 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - if: inputs.repo-checkout != 'false' # only explicit false prevents repo checkout
+    - if: inputs.repo-checkout != 'false'
       uses: actions/checkout@v4
-    - uses: actions/setup-go@v4
+    - if: inputs.setup-go != 'false'
+      uses: actions/setup-go@v4
       with:
         go-version: ${{ inputs.go-version-input }}
         check-latest: ${{ inputs.check-latest }}
