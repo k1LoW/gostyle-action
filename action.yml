@@ -1,0 +1,46 @@
+name: 'gostyle-action'
+description: 'Run gostyle'
+inputs:
+  go-version-input:
+    description: 'Version of Go to use for gostyle'
+    required: false
+  check-latest:
+    description: 'Set this option to true if you want the action to always check for the latest available Go version that satisfies the version spec'
+    required: false
+    default: false
+  cache:
+    description: 'Used to specify whether Go caching is needed. Set to true, if you would like to enable caching.'
+    required: false
+    default: true
+  go-package:
+    description: 'Go Package to scan with gostyle'
+    required: false
+    default: './...'
+  work-dir:
+    description: 'Directory in which to run gostyle'
+    required: false
+    default: '.'
+  repo-checkout:
+    description: "Checkout the repository"
+    required: false
+    default: true
+  go-version-file:
+    description: 'Path to the go.mod or go.work file.'
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - if: inputs.repo-checkout != 'false' # only explicit false prevents repo checkout
+      uses: actions/checkout@v4
+    - uses: actions/setup-go@v4
+      with:
+        go-version: ${{ inputs.go-version-input }}
+        check-latest: ${{ inputs.check-latest }}
+        go-version-file: ${{ inputs.go-version-file }}
+        cache: ${{ inputs.cache }}
+    - name: Install gostyle
+      run: go install github.com/k1LoW/gostyle@latest
+      shell: bash
+    - name: Run gostyle
+      run: go vet -vettool=`which gostyle` ${{ inputs.work-dir }}/${{ inputs.go-package }}
+      shell: bash
