@@ -35,8 +35,8 @@ inputs:
     description: 'Config file path for gostyle.'
     required: false
     default: ''
-  args:
-    description: 'Args for gostyle'
+  flags:
+    description: 'Flags for gostyle'
     required: false
     default: ''
 runs:
@@ -60,13 +60,13 @@ runs:
         if [ -z "${{ inputs.work-dir }}" ]; then echo "PACKAGE=${{ inputs.go-package }}" >> "$GITHUB_OUTPUT"; fi
         if [ -n "${{ inputs.work-dir }}" ]; then echo "PACKAGE=${{ inputs.work-dir }}/${{ inputs.go-package }}" >> "$GITHUB_OUTPUT"; fi
       shell: bash
-    - name: Set args
-      id: args
+    - name: Set flags
+      id: flags
       run: |
-        if [ -z "${{ inputs.config-file }}" ]; then echo "ARGS=${{ inputs.args }}" >> "$GITHUB_OUTPUT"; fi
-        if [ -n "${{ inputs.config-file }}" ] && [ -z "${{ inputs.work-dir }}" ]; then echo "ARGS=-gostyle.config=${PWD}/${{ inputs.config-file }}" >> "$GITHUB_OUTPUT"; fi
-        if [ -n "${{ inputs.config-file }}" ] && [ -n "${{ inputs.work-dir }}" ]; then echo "ARGS=-gostyle.config=${PWD}/${{ inputs.work-dir }}/${{ inputs.config-file }}" >> "$GITHUB_OUTPUT"; fi
+        if [ -z "${{ inputs.config-file }}" ]; then echo "FLAGS=${{ inputs.flags }}" >> "$GITHUB_OUTPUT"; fi
+        if [ -n "${{ inputs.config-file }}" ] && [ -z "${{ inputs.work-dir }}" ]; then echo "FLAGS=-gostyle.config=${PWD}/${{ inputs.config-file }}" >> "$GITHUB_OUTPUT"; fi
+        if [ -n "${{ inputs.config-file }}" ] && [ -n "${{ inputs.work-dir }}" ]; then echo "FLAGS=-gostyle.config=${PWD}/${{ inputs.work-dir }}/${{ inputs.config-file }}" >> "$GITHUB_OUTPUT"; fi
       shell: bash
     - name: Run gostyle
-      run: go vet -vettool=`which gostyle` ${{ steps.args.outputs.ARGS }} ${{ steps.package.outputs.PACKAGE }}
+      run: go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }}
       shell: bash
