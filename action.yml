@@ -37,7 +37,7 @@ inputs:
   use-reviewdog:
     description: 'Use reviewdog'
     required: false
-    default: false
+    default: true
   reviewdog-version:
     description: 'Version of reviewdog'
     required: false
@@ -53,7 +53,7 @@ inputs:
   reviewdog-filter-mode:
     description: "Filtering for the reviewdog command [added,diff_context,file,nofilter]."
     required: false
-    default: "add"
+    default: "added"
   # inputs for gostyle
   work-dir:
     description: 'Directory in which to run gostyle'
