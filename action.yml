@@ -111,12 +111,18 @@ runs:
       shell: bash
     - name: Set fail-on-error
       id: failonerror
-      if: inputs.fail-on-error == 'false'
+      if: inputs.fail-on-error == 'false' || inputs.use-reviewdog != 'false'
       run: |
         echo 'FAILONERROR=|| true' >> "$GITHUB_OUTPUT"
       shell: bash
+    - name: Set fail-on-error
+      id: reviewdog-failonerror
+      if: inputs.use-reviewdog != 'false' && inputs.fail-on-error != 'false'
+      run: |
+        echo 'FAILONERROR=-fail-on-error' >> "$GITHUB_OUTPUT"
+      shell: bash
     - name: Run gostyle
-      run: (go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }} ${{ steps.failonerror.outputs.FAILONERROR }}) ${{ steps.pipe.outputs.PIPE }}
+      run: (go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }} ${{ steps.failonerror.outputs.FAILONERROR }}) ${{ steps.pipe.outputs.PIPE }} ${{ steps.reviewdog-failonerror.FAILONERROR }}
       shell: bash
       env:
         REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github-token }}
