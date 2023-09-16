@@ -1,6 +1,10 @@
 name: 'gostyle-action'
 description: 'Run gostyle'
 inputs:
+  github-token:
+    description: The GitHub token
+    default: ${{ github.token }}
+    required: false
   # inputs for actions/checkout
   repo-checkout:
     description: "Checkout the repository"
@@ -29,6 +33,23 @@ inputs:
   go-version-file:
     description: 'Path to the go.mod or go.work file.'
     required: false
+  # inputs for reviewdog
+  use-reviewdog:
+    description: 'Use reviewdog'
+    required: false
+    default: false
+  reviewdog-version:
+    description: 'Version of reviewdog'
+    required: false
+    default: 'latest'
+  reviewdog-reporter:
+    description: 'Reporter of reviewdog command [github-pr-check,github-pr-review,github-check].'
+    required: false
+    default: "github-pr-check"
+  reviewdog-tool-name:
+    description: "Tool name to use for reviewdog reporter"
+    required: false
+    default: "gostyle"
   # inputs for gostyle
   work-dir:
     description: 'Directory in which to run gostyle'
@@ -46,6 +67,10 @@ inputs:
     description: 'Version of gostyle'
     required: false
     default: 'latest'
+  fail-on-error:
+    description: 'Fail on gostyle error'
+    required: false
+    default: true
 runs:
   using: "composite"
   steps:
@@ -61,6 +86,10 @@ runs:
     - name: Install gostyle
       run: go install github.com/k1LoW/gostyle@${{ inputs.version }}
       shell: bash
+    - name: Install reviewdog
+      if: inputs.use-reviewdog != 'false'
+      run: go install github.com/reviewdog/reviewdog/cmd/reviewdog@${{ inputs.reviewdog-version }}
+      shell: bash
     - name: Set package
       id: package
       run: |
@@ -74,6 +103,26 @@ runs:
         if [ -n "${{ inputs.config-file }}" ] && [ -z "${{ inputs.work-dir }}" ]; then echo "FLAGS=-gostyle.config=${PWD}/${{ inputs.config-file }}" >> "$GITHUB_OUTPUT"; fi
         if [ -n "${{ inputs.config-file }}" ] && [ -n "${{ inputs.work-dir }}" ]; then echo "FLAGS=-gostyle.config=${PWD}/${{ inputs.work-dir }}/${{ inputs.config-file }}" >> "$GITHUB_OUTPUT"; fi
       shell: bash
-    - name: Run gostyle
-      run: go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }}
+    - name: Set pipe
+      id: pipe
+      if: inputs.use-reviewdog != 'false'
+      run: |
+        echo 'PIPE=| reviewdog -name=${{ inputs.reviewdog-tool-name }} -f=golint -diff="git diff FETCH_HEAD" --reporter=${{ inputs.reviewdog-reporter }} --tee' >> "$GITHUB_OUTPUT"
       shell: bash
+    - name: Set fail-on-error
+      id: failonerror
+      if: inputs.fail-on-error == 'false' || inputs.use-reviewdog != 'false'
+      run: |
+        echo 'FAILONERROR=|| true' >> "$GITHUB_OUTPUT"
+      shell: bash
+    - name: Set fail-on-error
+      id: reviewdog-failonerror
+      if: inputs.use-reviewdog != 'false' && inputs.fail-on-error != 'false'
+      run: |
+        echo 'FAILONERROR=-fail-on-error' >> "$GITHUB_OUTPUT"
+      shell: bash
+    - name: Run gostyle
+      run: (go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }} ${{ steps.failonerror.outputs.FAILONERROR }}) ${{ steps.pipe.outputs.PIPE }} ${{ steps.reviewdog-failonerror.outputs.FAILONERROR }}
+      shell: bash
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github-token }}
