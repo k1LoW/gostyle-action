@@ -29,6 +29,15 @@ inputs:
   go-version-file:
     description: 'Path to the go.mod or go.work file.'
     required: false
+  # inputs for reviewdog
+  use-reviewdog:
+    description: 'Use reviewdog'
+    required: false
+    default: false
+  reviewdog-version:
+    description: 'Version of reviewdog'
+    required: false
+    default: 'latest'
   # inputs for gostyle
   work-dir:
     description: 'Directory in which to run gostyle'
@@ -61,6 +70,10 @@ runs:
     - name: Install gostyle
       run: go install github.com/k1LoW/gostyle@${{ inputs.version }}
       shell: bash
+    - name: Install reviewdog
+      if: inputs.use-reviewdog != 'false'
+      run: go install github.com/reviewdog/reviewdog/cmd/reviewdog@${{ inputs.reviewdog-version }}
+      shell: bash
     - name: Set package
       id: package
       run: |
@@ -74,6 +87,12 @@ runs:
         if [ -n "${{ inputs.config-file }}" ] && [ -z "${{ inputs.work-dir }}" ]; then echo "FLAGS=-gostyle.config=${PWD}/${{ inputs.config-file }}" >> "$GITHUB_OUTPUT"; fi
         if [ -n "${{ inputs.config-file }}" ] && [ -n "${{ inputs.work-dir }}" ]; then echo "FLAGS=-gostyle.config=${PWD}/${{ inputs.work-dir }}/${{ inputs.config-file }}" >> "$GITHUB_OUTPUT"; fi
       shell: bash
+    - name: Set pipe
+      id: pipe
+      if: inputs.use-reviewdog != 'false'
+      run: |
+        echo 'PIPE=| reviewdog -f=govet -diff="git diff FETCH_HEAD"' >> "$GITHUB_OUTPUT"
+      shell: bash
     - name: Run gostyle
-      run: go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }}
+      run: go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }} ${{ steps.pipe.outputs.PIPE }}
       shell: bash
