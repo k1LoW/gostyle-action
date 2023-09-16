@@ -1,6 +1,10 @@
 name: 'gostyle-action'
 description: 'Run gostyle'
 inputs:
+  github-token:
+    description: The GitHub token
+    default: ${{ github.token }}
+    required: false
   # inputs for actions/checkout
   repo-checkout:
     description: "Checkout the repository"
@@ -96,3 +100,5 @@ runs:
     - name: Run gostyle
       run: go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }} ${{ steps.pipe.outputs.PIPE }}
       shell: bash
+      env:
+        REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github-token }}
