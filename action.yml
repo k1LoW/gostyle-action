@@ -67,6 +67,10 @@ inputs:
     description: 'Version of gostyle'
     required: false
     default: 'latest'
+  fail-on-error:
+    description: 'Fail on gostyle error'
+    required: false
+    default: true
 runs:
   using: "composite"
   steps:
@@ -103,10 +107,16 @@ runs:
       id: pipe
       if: inputs.use-reviewdog != 'false'
       run: |
-        echo 'PIPE=|& reviewdog -name=${{ inputs.reviewdog-tool-name }} -f=golint -diff="git diff FETCH_HEAD" -level=error --reporter=${{ inputs.reviewdog-reporter }} --tee' >> "$GITHUB_OUTPUT"
+        echo 'PIPE=| reviewdog -name=${{ inputs.reviewdog-tool-name }} -f=golint -diff="git diff FETCH_HEAD" --reporter=${{ inputs.reviewdog-reporter }} --tee' >> "$GITHUB_OUTPUT"
+      shell: bash
+    - name: Set fail-on-error
+      id: failonerror
+      if: inputs.fail-on-error == 'false'
+      run: |
+        echo 'FAILONERROR=|| true' >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Run gostyle
-      run: go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }} ${{ steps.pipe.outputs.PIPE }}
+      run: go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }} ${{ steps.pipe.outputs.PIPE }} ${{ steps.failonerror.outputs.FAILONERROR }}
       shell: bash
       env:
         REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github-token }}
