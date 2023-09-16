@@ -46,6 +46,10 @@ inputs:
     description: 'Reporter of reviewdog command [github-pr-check,github-pr-review,github-check].'
     required: false
     default: "github-pr-check"
+  reviewdog-tool-name:
+    description: "Tool name to use for reviewdog reporter"
+    required: false
+    default: "gostyle"
   # inputs for gostyle
   work-dir:
     description: 'Directory in which to run gostyle'
@@ -99,7 +103,7 @@ runs:
       id: pipe
       if: inputs.use-reviewdog != 'false'
       run: |
-        echo 'PIPE=| reviewdog -f=golint -diff="git diff FETCH_HEAD" --reporter=${{ inputs.reviewdog-reporter }} --tee' >> "$GITHUB_OUTPUT"
+        echo 'PIPE=| reviewdog -name=${{ inputs.reviewdog-tool-name }} -f=golint -diff="git diff FETCH_HEAD" --reporter=${{ inputs.reviewdog-reporter }} --tee' >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Run gostyle
       run: go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }} ${{ steps.pipe.outputs.PIPE }}
