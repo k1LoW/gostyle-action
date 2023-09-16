@@ -122,7 +122,7 @@ runs:
         echo 'FAILONERROR=-fail-on-error' >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Run gostyle
-      run: (go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }} ${{ steps.failonerror.outputs.FAILONERROR }}) ${{ steps.pipe.outputs.PIPE }} ${{ steps.reviewdog-failonerror.FAILONERROR }}
+      run: (go vet -vettool=`which gostyle` ${{ steps.flags.outputs.FLAGS }} ${{ steps.package.outputs.PACKAGE }} ${{ steps.failonerror.outputs.FAILONERROR }}) ${{ steps.pipe.outputs.PIPE }} ${{ steps.reviewdog-failonerror.outputs.FAILONERROR }}
       shell: bash
       env:
         REVIEWDOG_GITHUB_API_TOKEN: ${{ inputs.github-token }}
