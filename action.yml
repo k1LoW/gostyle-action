@@ -37,7 +37,7 @@ inputs:
   use-reviewdog:
     description: 'Use reviewdog'
     required: false
-    default: false
+    default: true
   reviewdog-version:
     description: 'Version of reviewdog'
     required: false
@@ -50,6 +50,10 @@ inputs:
     description: "Tool name to use for reviewdog reporter"
     required: false
     default: "gostyle"
+  reviewdog-filter-mode:
+    description: "Filtering for the reviewdog command [added,diff_context,file,nofilter]."
+    required: false
+    default: "added"
   # inputs for gostyle
   work-dir:
     description: 'Directory in which to run gostyle'
@@ -107,7 +111,7 @@ runs:
       id: pipe
       if: inputs.use-reviewdog != 'false'
       run: |
-        echo 'PIPE=| reviewdog -name=${{ inputs.reviewdog-tool-name }} -f=golint -diff="git diff FETCH_HEAD" --reporter=${{ inputs.reviewdog-reporter }} --tee' >> "$GITHUB_OUTPUT"
+        echo 'PIPE=| reviewdog -name=${{ inputs.reviewdog-tool-name }} -f=golint -filter-mode="${{ inputs.reviewdog-filter-mode }}" --reporter=${{ inputs.reviewdog-reporter }} --tee' >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Set fail-on-error
       id: failonerror
