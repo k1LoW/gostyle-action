@@ -1,6 +1,12 @@
 name: 'gostyle-action'
 description: 'Run gostyle'
 inputs:
+  # inputs for actions/checkout
+  repo-checkout:
+    description: "Checkout the repository"
+    required: false
+    default: false
+  # inputs for actions/setup-go
   setup-go:
     description: "Set up Go"
     required: false
@@ -20,17 +26,14 @@ inputs:
     description: 'Go Package to scan with gostyle'
     required: false
     default: './...'
+  go-version-file:
+    description: 'Path to the go.mod or go.work file.'
+    required: false
+  # inputs for gostyle
   work-dir:
     description: 'Directory in which to run gostyle'
     required: false
     default: ''
-  repo-checkout:
-    description: "Checkout the repository"
-    required: false
-    default: false
-  go-version-file:
-    description: 'Path to the go.mod or go.work file.'
-    required: false
   config-file:
     description: 'Config file path for gostyle.'
     required: false
@@ -39,6 +42,10 @@ inputs:
     description: 'Flags for gostyle'
     required: false
     default: ''
+  version:
+    description: 'Version of gostyle'
+    required: false
+    default: 'latest'
 runs:
   using: "composite"
   steps:
@@ -52,7 +59,7 @@ runs:
         go-version-file: ${{ inputs.go-version-file }}
         cache: ${{ inputs.cache }}
     - name: Install gostyle
-      run: go install github.com/k1LoW/gostyle@latest
+      run: go install github.com/k1LoW/gostyle@${{ inputs.version }}
       shell: bash
     - name: Set package
       id: package
