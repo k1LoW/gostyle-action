@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.3.0](https://github.com/k1LoW/gostyle-action/compare/v1.2.0...v1.3.0) - 2023-09-19
+### Fix bug 🐛
+- Fix work-dir by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/6
+
 ## [v1.2.0](https://github.com/k1LoW/gostyle-action/compare/v1.1.0...v1.2.0) - 2023-09-16
 ### New Features 🎉
 - Support reviewdog by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/5
