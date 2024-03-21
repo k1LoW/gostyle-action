@@ -1,5 +1,10 @@
 # Changelog
 
+## [v1.4.0](https://github.com/k1LoW/gostyle-action/compare/v1.3.1...v1.4.0) - 2024-03-21
+### Other Changes
+- Use -f=govet by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/11
+- Use setup-go v5 by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/13
+
 ## [v1.3.1](https://github.com/k1LoW/gostyle-action/compare/v1.3.0...v1.3.1) - 2024-03-21
 ### Fix bug 🐛
 - Fix pipe ( to catch go vet output ) by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/9
