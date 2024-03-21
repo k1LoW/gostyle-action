@@ -1,0 +1,32 @@
+name: test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        id: setup-go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ./testdata/example/go.mod
+          check-latest: true
+
+      - name: Run gostyle
+        uses: ./
+        with:
+          work-dir: ./testdata/example
+          reviewdog-filter-mode: nofilter
+          reviewdog-reporter: github-pr-check
+          fail-on-error: false
