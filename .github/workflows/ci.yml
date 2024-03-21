@@ -29,3 +29,4 @@ jobs:
           work-dir: ./testdata/example
           reviewdog-filter-mode: nofilter
           reviewdog-reporter: github-pr-check
+          fail-on-error: false
