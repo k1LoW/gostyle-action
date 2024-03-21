@@ -104,7 +104,7 @@ runs:
       id: pipe
       if: inputs.use-reviewdog != 'false'
       run: |
-        echo 'PIPE=|& reviewdog -name=${{ inputs.reviewdog-tool-name }} -f=golint -filter-mode="${{ inputs.reviewdog-filter-mode }}" --reporter=${{ inputs.reviewdog-reporter }} --tee' >> "$GITHUB_OUTPUT"
+        echo 'PIPE=|& reviewdog -name=${{ inputs.reviewdog-tool-name }} -f=govet -filter-mode="${{ inputs.reviewdog-filter-mode }}" --reporter=${{ inputs.reviewdog-reporter }} --tee' >> "$GITHUB_OUTPUT"
       shell: bash
     - name: Set fail-on-error
       id: failonerror
