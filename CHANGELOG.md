@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.5.0](https://github.com/k1LoW/gostyle-action/compare/v1.4.2...v1.5.0) - 2025-09-14
+### Other Changes
+- fix: update reviewdog installation to use action-setup by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/18
+
 ## [v1.4.2](https://github.com/k1LoW/gostyle-action/compare/v1.4.1...v1.4.2) - 2025-09-14
 
 ## [v1.4.1](https://github.com/k1LoW/gostyle-action/compare/v1.4.0...v1.4.1) - 2025-09-14
