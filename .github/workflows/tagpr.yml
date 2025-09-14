@@ -13,13 +13,13 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Check out source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
 
       - id: run-tagpr
         name: Run tagpr
-        uses: Songmu/tagpr@v1
+        uses: Songmu/tagpr@9c294c8b7b1815a5f3b7c61d6ee6aa50ac25b030 # v1.8.4
 
-      - uses: haya14busa/action-update-semver@v1
+      - uses: haya14busa/action-update-semver@7d2c558640ea49e798d46539536190aff8c18715 # v1.5.1
         if: steps.run-tagpr.outputs.tag != ''
         with:
           major_version_tag_only: true
