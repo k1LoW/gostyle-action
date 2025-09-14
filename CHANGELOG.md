@@ -1,5 +1,7 @@
 # Changelog
 
+## [v1.4.2](https://github.com/k1LoW/gostyle-action/compare/v1.4.1...v1.4.2) - 2025-09-14
+
 ## [v1.4.1](https://github.com/k1LoW/gostyle-action/compare/v1.4.0...v1.4.1) - 2025-09-14
 ### Other Changes
 - chore: pin actions and setup dependabot by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/14
