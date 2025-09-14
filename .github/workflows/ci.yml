@@ -28,5 +28,5 @@ jobs:
         with:
           work-dir: ./testdata/example
           reviewdog-filter-mode: nofilter
-          reviewdog-reporter: github-pr-check
+          reviewdog-reporter: github-pr-review
           fail-on-error: false
