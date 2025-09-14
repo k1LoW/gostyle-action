@@ -1,5 +1,10 @@
 # Changelog
 
+## [v1.4.1](https://github.com/k1LoW/gostyle-action/compare/v1.4.0...v1.4.1) - 2025-09-14
+### Other Changes
+- chore: pin actions and setup dependabot by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/14
+- chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/k1LoW/gostyle-action/pull/16
+
 ## [v1.4.0](https://github.com/k1LoW/gostyle-action/compare/v1.3.1...v1.4.0) - 2024-03-21
 ### Other Changes
 - Use -f=govet by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/11
