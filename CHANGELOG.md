@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.5.1](https://github.com/k1LoW/gostyle-action/compare/v1.5.0...v1.5.1) - 2025-09-21
+### Other Changes
+- chore(deps): bump Songmu/tagpr from 1.8.4 to 1.9.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/gostyle-action/pull/20
+
 ## [v1.5.0](https://github.com/k1LoW/gostyle-action/compare/v1.4.2...v1.5.0) - 2025-09-14
 ### Other Changes
 - fix: update reviewdog installation to use action-setup by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/18
