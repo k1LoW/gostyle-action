@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.5.2](https://github.com/k1LoW/gostyle-action/compare/v1.5.1...v1.5.2) - 2026-04-12
+### Other Changes
+- chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/k1LoW/gostyle-action/pull/28
+- chore(deps): bump Songmu/tagpr from 1.10.0 to 1.15.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/gostyle-action/pull/30
+- chore(deps): bump Songmu/tagpr from 1.15.0 to 1.17.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/gostyle-action/pull/31
+- chore(deps): bump actions/setup-go from 6.2.0 to 6.4.0 in the dependencies group across 1 directory by @dependabot[bot] in https://github.com/k1LoW/gostyle-action/pull/33
+- chore(deps): bump Songmu/tagpr from 1.17.0 to 1.18.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/gostyle-action/pull/34
+
 ## [v1.5.1](https://github.com/k1LoW/gostyle-action/compare/v1.5.0...v1.5.1) - 2025-12-27
 ### Fix bug 🐛
 - fix: replace deprecated -fail-on-error with -fail-level=any by @k1LoW in https://github.com/k1LoW/gostyle-action/pull/27
